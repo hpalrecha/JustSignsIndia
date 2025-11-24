@@ -231,14 +231,6 @@ export default function AdminDashboard() {
                           <Badge variant="secondary">{claim.productInstalled}</Badge>
                         </div>
 
-                        {/* Issue Information */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground">Issue Date</p>
-                            <p className="text-sm">{claim.issueDate}</p>
-                          </div>
-                        </div>
-
                         {/* End User Information */}
                         <div>
                           <h4 className="font-semibold mb-3">End User Information</h4>
@@ -339,10 +331,6 @@ export default function AdminDashboard() {
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Claim SQFT</p>
                               <p className="text-sm">{claim.claimSqft}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-muted-foreground">Claim Value</p>
-                              <p className="text-sm font-semibold">{claim.claimValue}</p>
                             </div>
                           </div>
                         </div>
