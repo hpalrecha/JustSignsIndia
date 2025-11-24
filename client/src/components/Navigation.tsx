@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import logoImage from "@assets/Screenshot 2025-11-24 at 5.57.25 PM_1763987250379.png";
+import logoImage from "@assets/logo.png";
 
 export function Navigation() {
   const [location] = useLocation();
