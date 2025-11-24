@@ -215,63 +215,202 @@ export default function AdminDashboard() {
                     <Skeleton key={i} className="h-16 w-full" />
                   ))}
                 </div>
-              ) : (
-                <div className="border rounded-lg overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Customer</TableHead>
-                        <TableHead>Phone</TableHead>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Center</TableHead>
-                        <TableHead>Issue</TableHead>
-                        <TableHead>Images</TableHead>
-                        <TableHead>Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {warrantyClaims && warrantyClaims.length > 0 ? (
-                        warrantyClaims.map((claim) => (
-                          <TableRow key={claim.id} data-testid={`row-claim-${claim.id}`}>
-                            <TableCell className="font-medium">{claim.customerName}</TableCell>
-                            <TableCell>{claim.phone}</TableCell>
-                            <TableCell>
-                              <Badge variant="secondary">{claim.productType}</Badge>
-                            </TableCell>
-                            <TableCell>{claim.installationCenter}</TableCell>
-                            <TableCell className="max-w-xs truncate">{claim.issueDescription}</TableCell>
-                            <TableCell>
-                              {claim.imageUrls && claim.imageUrls.length > 0 ? (
+              ) : warrantyClaims && warrantyClaims.length > 0 ? (
+                <div className="space-y-6">
+                  {warrantyClaims.map((claim) => (
+                    <Card key={claim.id} className="p-6" data-testid={`card-claim-${claim.id}`}>
+                      <div className="space-y-6">
+                        {/* Header */}
+                        <div className="flex items-center justify-between pb-4 border-b">
+                          <div>
+                            <h3 className="font-bold text-lg">Claim #{claim.id}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              Submitted: {claim.createdAt ? new Date(claim.createdAt).toLocaleDateString() : 'N/A'}
+                            </p>
+                          </div>
+                          <Badge variant="secondary">{claim.productInstalled}</Badge>
+                        </div>
+
+                        {/* Issue Information */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">Issue Date</p>
+                            <p className="text-sm">{claim.issueDate}</p>
+                          </div>
+                        </div>
+
+                        {/* End User Information */}
+                        <div>
+                          <h4 className="font-semibold mb-3">End User Information</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Name</p>
+                              <p className="text-sm">{claim.endUserName}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Email</p>
+                              <p className="text-sm">{claim.endUserEmail}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Mobile</p>
+                              <p className="text-sm">{claim.endUserMobile}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Studio Information */}
+                        <div>
+                          <h4 className="font-semibold mb-3">Studio Information</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Studio Name</p>
+                              <p className="text-sm">{claim.studioName}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Studio Email</p>
+                              <p className="text-sm">{claim.studioEmail}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Studio Contact</p>
+                              <p className="text-sm">{claim.studioContactNo}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Installation & Invoice Details */}
+                        <div>
+                          <h4 className="font-semibold mb-3">Installation & Invoice Details</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Installation Date</p>
+                              <p className="text-sm">{claim.installationDate}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Invoice Number</p>
+                              <p className="text-sm">{claim.invoiceNumber}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">JS Invoice Number</p>
+                              <p className="text-sm">{claim.justSignsInvoiceNumber}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Lot Number</p>
+                              <p className="text-sm">{claim.lotNumber}</p>
+                            </div>
+                            {claim.invoiceUrl && (
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground">Invoice</p>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => {
-                                    toast({
-                                      title: "Image URLs",
-                                      description: `${claim.imageUrls.length} image(s) uploaded`,
-                                    });
-                                  }}
-                                  data-testid={`button-view-images-${claim.id}`}
+                                  onClick={() => window.open(claim.invoiceUrl!, '_blank')}
+                                  className="p-0 h-auto text-primary"
                                 >
-                                  <ExternalLink className="w-4 h-4 mr-1" />
-                                  {claim.imageUrls.length}
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  View
                                 </Button>
-                              ) : (
-                                <span className="text-muted-foreground">0</span>
-                              )}
-                            </TableCell>
-                            <TableCell>{claim.createdAt ? new Date(claim.createdAt).toLocaleDateString() : 'N/A'}</TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
-                            No warranty claims yet
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
+                              </div>
+                            )}
+                            {claim.justSignsInvoiceUrl && (
+                              <div>
+                                <p className="text-sm font-medium text-muted-foreground">JS Invoice</p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => window.open(claim.justSignsInvoiceUrl!, '_blank')}
+                                  className="p-0 h-auto text-primary"
+                                >
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Item & Warranty Details */}
+                        <div>
+                          <h4 className="font-semibold mb-3">Item & Warranty Details</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Product Installed</p>
+                              <p className="text-sm">{claim.productInstalled}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Claim SQFT</p>
+                              <p className="text-sm">{claim.claimSqft}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Claim Value</p>
+                              <p className="text-sm font-semibold">{claim.claimValue}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Issue Description */}
+                        <div>
+                          <h4 className="font-semibold mb-3">Issue Description</h4>
+                          <p className="text-sm bg-muted p-4 rounded-lg">{claim.issue}</p>
+                        </div>
+
+                        {/* Evidence Images */}
+                        <div>
+                          <h4 className="font-semibold mb-3">Evidence</h4>
+                          <div className="grid grid-cols-3 gap-4">
+                            {claim.evidence1Url && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-2">Evidence 1</p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => window.open(claim.evidence1Url!, '_blank')}
+                                  className="w-full"
+                                >
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            )}
+                            {claim.evidence2Url && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-2">Evidence 2</p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => window.open(claim.evidence2Url!, '_blank')}
+                                  className="w-full"
+                                >
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            )}
+                            {claim.evidence3Url && (
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-2">Evidence 3</p>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => window.open(claim.evidence3Url!, '_blank')}
+                                  className="w-full"
+                                >
+                                  <ExternalLink className="w-3 h-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            )}
+                            {!claim.evidence1Url && !claim.evidence2Url && !claim.evidence3Url && (
+                              <p className="text-sm text-muted-foreground col-span-3">No evidence uploaded</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="border rounded-lg p-8 text-center text-muted-foreground">
+                  No warranty claims yet
                 </div>
               )}
             </TabsContent>
