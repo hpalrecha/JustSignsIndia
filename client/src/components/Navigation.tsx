@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import logoImage from "@assets/Screenshot 2025-11-24 at 5.57.25 PM_1763987250379.png";
 
 export function Navigation() {
   const [location] = useLocation();
@@ -20,10 +21,12 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/">
-            <a className="flex items-center gap-3 hover-elevate px-4 py-2 rounded-md" data-testid="link-home">
-              <div className="font-serif font-bold text-2xl text-primary">
-                JUST SIGNS INDIA
-              </div>
+            <a className="flex items-center hover-elevate px-3 py-2 rounded-md" data-testid="link-home">
+              <img 
+                src={logoImage} 
+                alt="Just Signs India" 
+                className="h-12 w-auto"
+              />
             </a>
           </Link>
 
