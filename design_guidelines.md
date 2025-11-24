@@ -4,8 +4,8 @@
 **Reference-Based**: Premium automotive/industrial B2B websites with bold, confident aesthetics. Draw inspiration from Tesla's product showcases, 3M's professional presentation style, and modern automotive brand experiences.
 
 ## Core Brand Identity
-**Color Palette** (User-Specified):
-- Primary: Blood Red (#B70F20) - Use for CTAs, headers, accents, hover states
+**Color Palette** (Logo-Based):
+- Primary: Coral Red (#DC5047 / HSL 5° 72% 58%) - Use for CTAs, headers, accents, hover states (extracted from company logo)
 - Background: White (#FFFFFF) - Primary background for clean, premium feel
 - Typography: Black (#000000) - Main text, headings
 - Secondary: Light gray (#F5F5F5) - Section backgrounds for contrast
@@ -35,19 +35,19 @@
 **Hero Section**:
 - Full-width hero banner with automotive/architectural imagery showing 3M products in application
 - Large bold headline: "One-Stop Solution for Automotive & Architectural Protection Films"
-- Blood-red CTA button with white text: "Explore Our Products"
+- Coral-red CTA button with white text: "Explore Our Products"
 - Height: 85vh with centered content overlay
 
 **Company Stats Section**:
 - 4-column grid showcasing achievements
-- Large numbers in blood-red, black supporting text
+- Large numbers in coral-red, black supporting text
 - Icons above each stat (cityscape, projects, customers, anniversary)
 - Stats: "82+ Cities", "1200+ Projects", "95% Returning Customers", "10+ Years"
 
 **Product Carousel**:
 - Full-width image cards with product names
 - Categories: Wraps, PPF, Printable Wraps, Bike Styling, Signage
-- Minimal navigation dots in blood-red
+- Minimal navigation dots in coral-red
 
 ### About Us Page
 - Hero banner with company/facility image
@@ -59,19 +59,19 @@
 - Category grid: 2-column layout (desktop), stack on mobile
 - Each category card: Image background with overlay, bold title, short description
 - Individual product tiles within categories: 3-column grid
-- Product tile: Image, name, brief specs, "Get Quote" button in blood-red
+- Product tile: Image, name, brief specs, "Get Quote" button in coral-red
 
 ### Warranty Claim & Contact Pages
 - Clean, single-column forms (max-w-2xl centered)
-- Form fields with subtle borders, focus state in blood-red
-- Large, prominent submit button in blood-red
+- Form fields with subtle borders, focus state in coral-red
+- Large, prominent submit button in coral-red
 - Contact page: Split layout with form on left, contact details on right
 
 ## Component Library
 
 **Buttons**:
-- Primary: Blood-red background, white text, rounded corners (rounded-lg)
-- Secondary: White background, blood-red border and text
+- Primary: Coral-red background, white text, rounded corners (rounded-lg)
+- Secondary: White background, coral-red border and text
 - Sizes: Generous padding (px-8 py-4 for primary CTAs)
 - Blur background when overlaying images
 
@@ -83,13 +83,13 @@
 
 **Icons**:
 - Use Font Awesome or Heroicons via CDN
-- Blood-red color for feature icons
+- Coral-red color for feature icons
 - Size: 48px-64px for feature highlights, 24px for UI elements
 
 **Navigation**:
 - Sticky header with white background
-- Logo on left, navigation links center/right
-- Blood-red underline for active page
+- Company logo on left, navigation links center/right
+- Coral-red text color for active page
 - Mobile: Hamburger menu with slide-in panel
 
 ## Images
@@ -103,7 +103,7 @@
 
 ## Accessibility
 - Minimum contrast ratio 4.5:1 for all text
-- Focus indicators in blood-red outline
+- Focus indicators in coral-red outline
 - Form labels clearly associated with inputs
 - Responsive touch targets (minimum 44px)
 
