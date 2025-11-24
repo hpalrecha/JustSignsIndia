@@ -41,15 +41,43 @@ export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 // Warranty claim submissions
 export const warrantyClaims = pgTable("warranty_claims", {
   id: serial("id").primaryKey(),
-  customerName: text("customer_name").notNull(),
-  phone: text("phone").notNull(),
-  email: text("email").notNull(),
-  city: text("city").notNull(),
-  productType: text("product_type").notNull(),
-  installationCenter: text("installation_center").notNull(),
+  
+  // Issue Information
+  issueDate: text("issue_date").notNull(),
+  
+  // End User Information
+  endUserName: text("end_user_name").notNull(),
+  endUserEmail: text("end_user_email").notNull(),
+  endUserMobile: text("end_user_mobile").notNull(),
+  
+  // Installation Details
   installationDate: text("installation_date").notNull(),
-  issueDescription: text("issue_description").notNull(),
-  imageUrls: text("image_urls").array().notNull().default(sql`ARRAY[]::text[]`),
+  
+  // Studio Information
+  studioName: text("studio_name").notNull(),
+  studioEmail: text("studio_email").notNull(),
+  studioContactNo: text("studio_contact_no").notNull(),
+  
+  // Invoice Details
+  invoiceNumber: text("invoice_number").notNull(),
+  invoiceUrl: text("invoice_url"),
+  justSignsInvoiceNumber: text("just_signs_invoice_number").notNull(),
+  justSignsInvoiceUrl: text("just_signs_invoice_url"),
+  
+  // Product Details
+  lotNumber: text("lot_number").notNull(),
+  issue: text("issue").notNull(),
+  
+  // Evidence
+  evidence1Url: text("evidence_1_url"),
+  evidence2Url: text("evidence_2_url"),
+  evidence3Url: text("evidence_3_url"),
+  
+  // Item and Warranty Details
+  productInstalled: text("product_installed").notNull(),
+  claimSqft: text("claim_sqft").notNull(),
+  claimValue: text("claim_value").notNull(),
+  
   createdAt: timestamp("created_at").defaultNow(),
 });
 
