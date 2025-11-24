@@ -42,9 +42,6 @@ export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export const warrantyClaims = pgTable("warranty_claims", {
   id: serial("id").primaryKey(),
   
-  // Issue Information
-  issueDate: text("issue_date").notNull(),
-  
   // End User Information
   endUserName: text("end_user_name").notNull(),
   endUserEmail: text("end_user_email").notNull(),
@@ -65,6 +62,7 @@ export const warrantyClaims = pgTable("warranty_claims", {
   justSignsInvoiceUrl: text("just_signs_invoice_url"),
   
   // Product Details
+  productInstalled: text("product_installed").notNull(),
   lotNumber: text("lot_number").notNull(),
   issue: text("issue").notNull(),
   
@@ -74,9 +72,7 @@ export const warrantyClaims = pgTable("warranty_claims", {
   evidence3Url: text("evidence_3_url"),
   
   // Item and Warranty Details
-  productInstalled: text("product_installed").notNull(),
   claimSqft: text("claim_sqft").notNull(),
-  claimValue: text("claim_value").notNull(),
   
   createdAt: timestamp("created_at").defaultNow(),
 });

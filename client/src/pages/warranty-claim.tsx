@@ -27,7 +27,6 @@ export default function WarrantyClaim() {
   const form = useForm<InsertWarrantyClaim>({
     resolver: zodResolver(insertWarrantyClaimSchema),
     defaultValues: {
-      issueDate: "",
       endUserName: "",
       endUserEmail: "",
       endUserMobile: "",
@@ -39,14 +38,13 @@ export default function WarrantyClaim() {
       invoiceUrl: "",
       justSignsInvoiceNumber: "",
       justSignsInvoiceUrl: "",
+      productInstalled: "",
       lotNumber: "",
       issue: "",
       evidence1Url: "",
       evidence2Url: "",
       evidence3Url: "",
-      productInstalled: "",
       claimSqft: "",
-      claimValue: "",
     },
   });
 
@@ -225,26 +223,6 @@ export default function WarrantyClaim() {
           <Card className="p-8 md:p-12">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                
-                {/* Issue Information */}
-                <div>
-                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-issue-info-title">
-                    Issue Information
-                  </h3>
-                  <FormField
-                    control={form.control}
-                    name="issueDate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Issue Date *</FormLabel>
-                        <FormControl>
-                          <Input type="date" {...field} data-testid="input-issue-date" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
 
                 {/* End User Information */}
                 <div>
@@ -431,19 +409,48 @@ export default function WarrantyClaim() {
                   <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-product-details-title">
                     Product Details
                   </h3>
-                  <FormField
-                    control={form.control}
-                    name="lotNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Lot Number *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="LOT-001" {...field} data-testid="input-lot-number" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="productInstalled"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Product Installed *</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-product-installed">
+                                <SelectValue placeholder="Select a product" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="3M PPF 100 Gloss">3M PPF 100 Gloss</SelectItem>
+                              <SelectItem value="3M PPF SERIES 50 GLOSS W/CAPSHT">3M PPF SERIES 50 GLOSS W/CAPSHT</SelectItem>
+                              <SelectItem value="3M Scotchgard PPF Pro Series 200 Gloss">3M Scotchgard PPF Pro Series 200 Gloss</SelectItem>
+                              <SelectItem value="3M PPF 150 G">3M PPF 150 G</SelectItem>
+                              <SelectItem value="PRO SERIES 200 MATTE NO CAPSHT 60INX50FT -3MID">PRO SERIES 200 MATTE NO CAPSHT 60INX50FT -3MID</SelectItem>
+                              <SelectItem value="3M Wrap Film">3M Wrap Film</SelectItem>
+                              <SelectItem value="Window Film">Window Film</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lotNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Lot Number *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="LOT-001" {...field} data-testid="input-lot-number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 {/* Issue Section */}
@@ -512,64 +519,24 @@ export default function WarrantyClaim() {
                   </p>
                 </div>
 
-                {/* Item and Warranty Details */}
+                {/* Claim Details */}
                 <div>
                   <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-warranty-details-title">
-                    Item and Warranty Details
+                    Claim Details
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="productInstalled"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Select Product Installed *</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-product-installed">
-                                <SelectValue placeholder="Select a product" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="wrap-film">3M Wrap Film</SelectItem>
-                              <SelectItem value="ppf">Paint Protection Film (PPF)</SelectItem>
-                              <SelectItem value="window-film">Window Film</SelectItem>
-                              <SelectItem value="signage">Signage Solutions</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="claimSqft"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Claim SQFT / Claim SFT *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="100" type="number" {...field} data-testid="input-claim-sqft" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="claimValue"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Claim Value *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="₹ 10,000" {...field} data-testid="input-claim-value" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="claimSqft"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Claim SQFT / Claim SFT *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="100" type="number" {...field} data-testid="input-claim-sqft" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 {/* Submit Button */}
