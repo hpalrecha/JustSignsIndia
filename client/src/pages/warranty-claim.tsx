@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Navigation } from "@/components/Navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, Upload, X } from "lucide-react";
+import { Shield, Upload, X, FileText } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -18,95 +17,90 @@ import { apiRequest } from "@/lib/queryClient";
 
 export default function WarrantyClaim() {
   const { toast } = useToast();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
+  const [invoiceFile, setInvoiceFile] = useState<File | null>(null);
+  const [justSignsInvoiceFile, setJustSignsInvoiceFile] = useState<File | null>(null);
+  const [evidence1File, setEvidence1File] = useState<File | null>(null);
+  const [evidence2File, setEvidence2File] = useState<File | null>(null);
+  const [evidence3File, setEvidence3File] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<InsertWarrantyClaim>({
     resolver: zodResolver(insertWarrantyClaimSchema),
     defaultValues: {
-      customerName: "",
-      phone: "",
-      email: "",
-      city: "",
-      productType: "",
-      installationCenter: "",
+      issueDate: "",
+      endUserName: "",
+      endUserEmail: "",
+      endUserMobile: "",
       installationDate: "",
-      issueDescription: "",
-      imageUrls: [],
+      studioName: "",
+      studioEmail: "",
+      studioContactNo: "",
+      invoiceNumber: "",
+      invoiceUrl: "",
+      justSignsInvoiceNumber: "",
+      justSignsInvoiceUrl: "",
+      lotNumber: "",
+      issue: "",
+      evidence1Url: "",
+      evidence2Url: "",
+      evidence3Url: "",
+      productInstalled: "",
+      claimSqft: "",
+      claimValue: "",
     },
   });
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      if (selectedFiles.length + newFiles.length > 5) {
-        toast({
-          title: "Too Many Files",
-          description: "You can upload a maximum of 5 images.",
-          variant: "destructive",
-        });
-        return;
-      }
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
+  const uploadFile = async (file: File): Promise<string> => {
+    const response: any = await apiRequest("POST", "/api/upload-url", {});
+    const uploadURL = response?.uploadURL;
+    const objectPath = response?.objectPath;
+    
+    if (!uploadURL || typeof uploadURL !== 'string' || !objectPath || typeof objectPath !== 'string') {
+      throw new Error("Invalid upload URL received from server");
     }
+    
+    const uploadResponse = await fetch(uploadURL, {
+      method: "PUT",
+      body: file,
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("Failed to upload file");
+    }
+
+    return objectPath;
   };
 
-  const removeFile = (index: number) => {
-    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const uploadFiles = async () => {
-    if (selectedFiles.length === 0) return [];
-
+  const uploadAllFiles = async () => {
     setIsUploading(true);
-    const urls: string[] = [];
-
     try {
-      for (const file of selectedFiles) {
-        // Get signed upload URL and normalized object path from backend
-        const response: any = await apiRequest("POST", "/api/upload-url", {});
-        
-        console.log("Full response from /api/upload-url:", JSON.stringify(response));
-        console.log("response.uploadURL type:", typeof response?.uploadURL);
-        console.log("response.objectPath type:", typeof response?.objectPath);
-        
-        const uploadURL = response?.uploadURL;
-        const objectPath = response?.objectPath;
-        
-        console.log("uploadURL:", uploadURL);
-        console.log("objectPath:", objectPath);
-        
-        if (!uploadURL || typeof uploadURL !== 'string' || !objectPath || typeof objectPath !== 'string') {
-          console.error("Invalid response from /api/upload-url:", response);
-          console.error("Validation failed - uploadURL:", uploadURL, "objectPath:", objectPath);
-          throw new Error(`Invalid upload URL received from server. uploadURL: ${typeof uploadURL}, objectPath: ${typeof objectPath}`);
-        }
-        
-        // Upload file to signed URL
-        const uploadResponse = await fetch(uploadURL, {
-          method: "PUT",
-          body: file,
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
+      const urls: any = {};
 
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload file");
-        }
-
-        // Store the normalized object path (not the temporary signed URL)
-        urls.push(objectPath);
+      if (invoiceFile) {
+        urls.invoiceUrl = await uploadFile(invoiceFile);
+      }
+      if (justSignsInvoiceFile) {
+        urls.justSignsInvoiceUrl = await uploadFile(justSignsInvoiceFile);
+      }
+      if (evidence1File) {
+        urls.evidence1Url = await uploadFile(evidence1File);
+      }
+      if (evidence2File) {
+        urls.evidence2Url = await uploadFile(evidence2File);
+      }
+      if (evidence3File) {
+        urls.evidence3Url = await uploadFile(evidence3File);
       }
 
-      setUploadedUrls(urls);
       return urls;
     } catch (error) {
       console.error("Upload error:", error);
       toast({
         title: "Upload Failed",
-        description: error instanceof Error ? error.message : "Failed to upload images. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to upload files. Please try again.",
         variant: "destructive",
       });
       throw error;
@@ -117,10 +111,10 @@ export default function WarrantyClaim() {
 
   const submitMutation = useMutation({
     mutationFn: async (data: InsertWarrantyClaim) => {
-      const imageUrls = await uploadFiles();
+      const uploadedUrls = await uploadAllFiles();
       return await apiRequest("POST", "/api/warranty-claims", {
         ...data,
-        imageUrls,
+        ...uploadedUrls,
       });
     },
     onSuccess: () => {
@@ -129,8 +123,11 @@ export default function WarrantyClaim() {
         description: "We'll review your claim and get back to you within 24-48 hours.",
       });
       form.reset();
-      setSelectedFiles([]);
-      setUploadedUrls([]);
+      setInvoiceFile(null);
+      setJustSignsInvoiceFile(null);
+      setEvidence1File(null);
+      setEvidence2File(null);
+      setEvidence3File(null);
     },
     onError: (error: Error) => {
       toast({
@@ -142,16 +139,68 @@ export default function WarrantyClaim() {
   });
 
   const onSubmit = (data: InsertWarrantyClaim) => {
-    if (selectedFiles.length === 0) {
+    if (!evidence1File && !evidence2File && !evidence3File) {
       toast({
-        title: "No Images",
-        description: "Please upload at least one image of the issue.",
+        title: "No Evidence",
+        description: "Please upload at least one evidence image.",
         variant: "destructive",
       });
       return;
     }
     submitMutation.mutate(data);
   };
+
+  const FileUploadButton = ({ 
+    label, 
+    file, 
+    onFileSelect, 
+    onRemove,
+    testId 
+  }: { 
+    label: string; 
+    file: File | null; 
+    onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onRemove: () => void;
+    testId: string;
+  }) => (
+    <div className="space-y-2">
+      <label className="text-sm font-medium">{label}</label>
+      {!file ? (
+        <div>
+          <Input
+            type="file"
+            accept="image/*,.pdf"
+            onChange={onFileSelect}
+            className="hidden"
+            id={testId}
+            data-testid={testId}
+          />
+          <label htmlFor={testId}>
+            <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover-elevate active-elevate-2">
+              <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Click to upload file</p>
+            </div>
+          </label>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="text-sm truncate flex-1">{file.name}</span>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onRemove}
+            data-testid={`${testId}-remove`}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -172,24 +221,45 @@ export default function WarrantyClaim() {
 
       {/* Form Section */}
       <section className="py-20">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="p-8 md:p-12">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Customer Details */}
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                
+                {/* Issue Information */}
                 <div>
-                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-customer-details-title">
-                    Customer Details
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-issue-info-title">
+                    Issue Information
+                  </h3>
+                  <FormField
+                    control={form.control}
+                    name="issueDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Issue Date *</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} data-testid="input-issue-date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* End User Information */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-end-user-title">
+                    End User Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
-                      name="customerName"
+                      name="endUserName"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Customer Name *</FormLabel>
+                        <FormItem className="md:col-span-2">
+                          <FormLabel>End User Customer Name *</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your full name" {...field} data-testid="input-customer-name" />
+                            <Input placeholder="Enter customer name" {...field} data-testid="input-end-user-name" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -198,12 +268,12 @@ export default function WarrantyClaim() {
 
                     <FormField
                       control={form.control}
-                      name="phone"
+                      name="endUserEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone Number *</FormLabel>
+                          <FormLabel>End User Email *</FormLabel>
                           <FormControl>
-                            <Input placeholder="+91 9999999999" {...field} data-testid="input-phone" />
+                            <Input type="email" placeholder="customer@email.com" {...field} data-testid="input-end-user-email" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -212,26 +282,12 @@ export default function WarrantyClaim() {
 
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="endUserMobile"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email Address *</FormLabel>
+                          <FormLabel>End User Mobile No. *</FormLabel>
                           <FormControl>
-                            <Input type="email" placeholder="your@email.com" {...field} data-testid="input-email" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>City *</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Your city" {...field} data-testid="input-city" />
+                            <Input placeholder="+91 9999999999" {...field} data-testid="input-end-user-mobile" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -240,30 +296,245 @@ export default function WarrantyClaim() {
                   </div>
                 </div>
 
-                {/* Product Information */}
+                {/* Installation Details */}
                 <div>
-                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-product-info-title">
-                    Product Information
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-installation-title">
+                    Installation Details
+                  </h3>
+                  <FormField
+                    control={form.control}
+                    name="installationDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date of Installation *</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} data-testid="input-installation-date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Studio Information */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-studio-title">
+                    Studio Information
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
-                      name="productType"
+                      name="studioName"
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel>Studio Name *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter studio name" {...field} data-testid="input-studio-name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="studioEmail"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Product Type *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormLabel>Studio Email *</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="studio@email.com" {...field} data-testid="input-studio-email" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="studioContactNo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Studio Contact No. *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="+91 9999999999" {...field} data-testid="input-studio-contact" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Invoice Details */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-invoice-title">
+                    Invoice Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="invoiceNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Invoice Number *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="INV-001" {...field} data-testid="input-invoice-number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div>
+                      <FileUploadButton
+                        label="Upload Invoice"
+                        file={invoiceFile}
+                        onFileSelect={(e) => {
+                          if (e.target.files?.[0]) setInvoiceFile(e.target.files[0]);
+                        }}
+                        onRemove={() => setInvoiceFile(null)}
+                        testId="input-invoice-upload"
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="justSignsInvoiceNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Just Signs Invoice Number *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="JS-INV-001" {...field} data-testid="input-js-invoice-number" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div>
+                      <FileUploadButton
+                        label="Upload Just Signs Invoice"
+                        file={justSignsInvoiceFile}
+                        onFileSelect={(e) => {
+                          if (e.target.files?.[0]) setJustSignsInvoiceFile(e.target.files[0]);
+                        }}
+                        onRemove={() => setJustSignsInvoiceFile(null)}
+                        testId="input-js-invoice-upload"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Product Details */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-product-details-title">
+                    Product Details
+                  </h3>
+                  <FormField
+                    control={form.control}
+                    name="lotNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Lot Number *</FormLabel>
+                        <FormControl>
+                          <Input placeholder="LOT-001" {...field} data-testid="input-lot-number" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Issue Section */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-issue-section-title">
+                    Issue Section
+                  </h3>
+                  <FormField
+                    control={form.control}
+                    name="issue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Issue *</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Describe the issue in detail..." 
+                            rows={6}
+                            {...field} 
+                            data-testid="input-issue" 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Evidence Upload Section */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-evidence-title">
+                    Evidence Upload Section
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FileUploadButton
+                      label="Evidence 1"
+                      file={evidence1File}
+                      onFileSelect={(e) => {
+                        if (e.target.files?.[0]) setEvidence1File(e.target.files[0]);
+                      }}
+                      onRemove={() => setEvidence1File(null)}
+                      testId="input-evidence-1"
+                    />
+
+                    <FileUploadButton
+                      label="Evidence 2"
+                      file={evidence2File}
+                      onFileSelect={(e) => {
+                        if (e.target.files?.[0]) setEvidence2File(e.target.files[0]);
+                      }}
+                      onRemove={() => setEvidence2File(null)}
+                      testId="input-evidence-2"
+                    />
+
+                    <FileUploadButton
+                      label="Evidence 3"
+                      file={evidence3File}
+                      onFileSelect={(e) => {
+                        if (e.target.files?.[0]) setEvidence3File(e.target.files[0]);
+                      }}
+                      onRemove={() => setEvidence3File(null)}
+                      testId="input-evidence-3"
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Upload at least one evidence image. Supported formats: JPG, PNG, PDF
+                  </p>
+                </div>
+
+                {/* Item and Warranty Details */}
+                <div>
+                  <h3 className="font-serif font-bold text-2xl mb-6" data-testid="text-warranty-details-title">
+                    Item and Warranty Details
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="productInstalled"
+                      render={({ field }) => (
+                        <FormItem className="md:col-span-2">
+                          <FormLabel>Select Product Installed *</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
-                              <SelectTrigger data-testid="select-product-type">
-                                <SelectValue placeholder="Select product type" />
+                              <SelectTrigger data-testid="select-product-installed">
+                                <SelectValue placeholder="Select a product" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Wrap Film">Wrap Film</SelectItem>
-                              <SelectItem value="PPF">Paint Protection Film (PPF)</SelectItem>
-                              <SelectItem value="Window Film">Window Film</SelectItem>
-                              <SelectItem value="Bike Wrap">Bike Wrap/Decal</SelectItem>
-                              <SelectItem value="Signage">Signage</SelectItem>
+                              <SelectItem value="wrap-film">3M Wrap Film</SelectItem>
+                              <SelectItem value="ppf">Paint Protection Film (PPF)</SelectItem>
+                              <SelectItem value="window-film">Window Film</SelectItem>
+                              <SelectItem value="signage">Signage Solutions</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -273,12 +544,12 @@ export default function WarrantyClaim() {
 
                     <FormField
                       control={form.control}
-                      name="installationCenter"
+                      name="claimSqft"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Installation Center Name *</FormLabel>
+                          <FormLabel>Claim SQFT / Claim SFT *</FormLabel>
                           <FormControl>
-                            <Input placeholder="Where was it installed?" {...field} data-testid="input-installation-center" />
+                            <Input placeholder="100" type="number" {...field} data-testid="input-claim-sqft" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -287,12 +558,12 @@ export default function WarrantyClaim() {
 
                     <FormField
                       control={form.control}
-                      name="installationDate"
+                      name="claimValue"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Date of Installation *</FormLabel>
+                          <FormLabel>Claim Value *</FormLabel>
                           <FormControl>
-                            <Input type="date" {...field} data-testid="input-installation-date" />
+                            <Input placeholder="₹ 10,000" {...field} data-testid="input-claim-value" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -301,87 +572,16 @@ export default function WarrantyClaim() {
                   </div>
                 </div>
 
-                {/* Issue Description */}
-                <FormField
-                  control={form.control}
-                  name="issueDescription"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Issue Description *</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Describe the issue in detail..."
-                          className="min-h-32"
-                          {...field}
-                          data-testid="textarea-issue-description"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Image Upload */}
-                <div>
-                  <Label>Upload Images *</Label>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Please upload clear photos of the issue (up to 5 images)
-                  </p>
-                  
-                  <div className="border-2 border-dashed rounded-lg p-8 text-center hover-elevate">
-                    <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                      <span className="text-primary font-medium">Click to upload</span>
-                      <span className="text-muted-foreground"> or drag and drop</span>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        className="hidden"
-                        multiple
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        data-testid="input-file-upload"
-                      />
-                    </label>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      PNG, JPG, JPEG up to 10MB each
-                    </p>
-                  </div>
-
-                  {selectedFiles.length > 0 && (
-                    <div className="mt-4 space-y-2">
-                      {selectedFiles.map((file, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-3 bg-muted rounded-lg"
-                          data-testid={`file-item-${index}`}
-                        >
-                          <span className="text-sm truncate flex-1">{file.name}</span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeFile(index)}
-                            data-testid={`button-remove-file-${index}`}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
                 {/* Submit Button */}
                 <div className="pt-6">
                   <Button
                     type="submit"
                     size="lg"
                     className="w-full"
-                    disabled={submitMutation.isPending || isUploading || selectedFiles.length === 0}
+                    disabled={submitMutation.isPending || isUploading}
                     data-testid="button-submit-claim"
                   >
-                    {isUploading ? "Uploading..." : submitMutation.isPending ? "Submitting..." : "Submit Warranty Claim"}
+                    {isUploading ? "Uploading Files..." : submitMutation.isPending ? "Submitting..." : "Submit Warranty Claim"}
                   </Button>
                   <p className="text-sm text-center text-muted-foreground mt-4">
                     We'll review your claim and respond within 24-48 hours
