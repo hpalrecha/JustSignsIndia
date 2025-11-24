@@ -49,9 +49,10 @@ export default function WarrantyClaim() {
   });
 
   const uploadFile = async (file: File): Promise<string> => {
-    const response: any = await apiRequest("POST", "/api/upload-url", {});
-    const uploadURL = response?.uploadURL;
-    const objectPath = response?.objectPath;
+    const response = await apiRequest("POST", "/api/upload-url", {});
+    const data = await response.json();
+    const uploadURL = data?.uploadURL;
+    const objectPath = data?.objectPath;
     
     if (!uploadURL || typeof uploadURL !== 'string' || !objectPath || typeof objectPath !== 'string') {
       throw new Error("Invalid upload URL received from server");
