@@ -1,0 +1,222 @@
+T — TASK
+Build a modern, fast, mobile-responsive website for Just Signs India Pvt. Ltd., the Master Distributor of 3M Wrap Films, PPF, Window Films & Signage Solutions in India. Use blood-red (#B70F20) as the primary color, with white and black as accent colors. The design must look premium, bold, minimal and brand-aligned.
+
+The website must include:
+
+Home Page
+
+About Us Page
+
+Products Page
+
+Warranty Claim Page
+
+Contact Us Page
+
+Admin Login Backend to view:
+
+Contact form submissions
+
+Warranty claim submissions
+
+A — ACTIONS REQUIRED
+
+Design & UI
+
+Use Blood-Red as primary color (#B70F20)
+
+White background sections and black typography for modern contrast
+
+Use bold geometric fonts (Montserrat / Poppins)
+
+Add full-width hero banners
+
+Add icons for features like “82+ Cities”, “1200+ Projects”, “95% Returning Customers”, “10+ Years”
+
+Include product categories with image tiles
+
+Add clean CTA buttons: “Explore Products”, “Start Warranty Claim”, “Contact Us”
+
+Pages to Build
+
+HOME PAGE
+
+Hero banner: “One-Stop Solution for Automotive & Architectural Protection Films”
+
+Showcase: Wraps, PPF, Printable Wraps, Bike Styling, Signage
+
+Company Facts (from PDF):
+
+82+ Cities Covered
+
+1200+ Projects Delivered
+
+95% Returning Customers
+
+10+ Years in the Industry
+
+Carousel for major products
+
+CTA: “Explore Our Products”
+
+ABOUT US PAGE
+
+Use detailed content from uploaded PDF:
+
+About Company
+
+Automotive + Architecture Solutions
+
+Association with 3M
+
+In-house printing, plotting & lamination infrastructure
+
+E-store info
+
+Bike Customization section
+
+Wrap Films 2080 details
+
+Printable Wraps
+
+PPF description
+
+PRODUCTS PAGE
+
+Create structured categories:
+
+3M™ 2080 Wrap Films
+
+Printable Wrap Films
+
+Bike Styling & Decals
+
+Paint Protection Films
+
+Window Films
+
+Signage Solutions
+
+Each category should contain:
+
+Short description
+
+3–6 product tiles
+
+CTA: “Get Quote”
+
+WARRANTY CLAIM PAGE
+
+Include a clean form capturing:
+
+Customer Name
+
+Phone Number
+
+Email
+
+City
+
+Product Type (Wrap/PPF/Window Film)
+
+Installation Center Name
+
+Date of Installation
+
+Issue Description
+
+Upload Images (multiple)
+
+Submit
+
+CONTACT US PAGE
+
+Show:
+
+Business Enquiry: +91 99459 51456 | hp@justsigns.co.in
+
+General Enquiry: +91 93531 89410 | sales@justsigns.co.in
+
+Contact Form fields:
+
+Name
+
+Phone
+
+Email
+
+City
+
+Message
+
+BACKEND ADMIN PANEL
+
+Secure login (username/password)
+
+Dashboard showing:
+
+Contact form submissions
+
+Warranty claim entries
+
+Export to CSV
+
+Filter by date
+
+View image uploads
+
+TECH STACK (Your Choice)
+
+Use any suitable technology such as:
+
+Next.js / React
+
+Node.js + MongoDB / MySQL
+
+Firebase
+
+PHP + MySQL
+
+HTML/CSS/JS + Admin Panel Framework
+
+C — CONTEXT
+Use content extracted from the company profile PDF uploaded:
+
+About Us introduction
+
+Company stats
+
+All product descriptions from automotive + architecture set
+
+3M 2080 Wraps
+
+Printable Wraps
+
+Bike Styling & Decals
+
+Paint Protection Films
+
+In-house infrastructure
+
+Contact details
+
+This PDF is your primary content source. Incorporate it naturally into About Us + Product Details.
+
+
+PPT for royal enfiled
+
+O — OUTPUT FORMAT REQUIRED
+
+Deliver the following:
+
+Complete website code (frontend + backend)
+
+Folder structure
+
+Responsive HTML/CSS/JS or React components
+
+Admin login + database models
+
+All pages fully functional
+
+Instructions to deploy on hosting (Netlify, Vercel, cPanel or any server)
