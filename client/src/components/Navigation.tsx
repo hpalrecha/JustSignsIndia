@@ -46,11 +46,6 @@ export function Navigation() {
                 </a>
               </Link>
             ))}
-            <Link href="/admin">
-              <Button variant="outline" size="sm" className="ml-2" data-testid="button-admin">
-                Admin
-              </Button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -83,16 +78,6 @@ export function Navigation() {
                 </a>
               </Link>
             ))}
-            <Link href="/admin">
-              <Button
-                variant="outline"
-                className="w-full mt-2"
-                onClick={() => setMobileMenuOpen(false)}
-                data-testid="button-mobile-admin"
-              >
-                Admin Login
-              </Button>
-            </Link>
           </div>
         )}
       </div>
