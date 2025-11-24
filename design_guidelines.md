@@ -5,7 +5,7 @@
 
 ## Core Brand Identity
 **Color Palette** (Logo-Based):
-- Primary: Coral Red (#DC5047 / HSL 5° 72% 58%) - Use for CTAs, headers, accents, hover states (extracted from company logo)
+- Primary: Coral Red (#C7493E / HSL 5° 72% 46%) - Use for CTAs, headers, accents, hover states (adjusted from logo color for WCAG AA accessibility compliance - 4.5:1 contrast ratio)
 - Background: White (#FFFFFF) - Primary background for clean, premium feel
 - Typography: Black (#000000) - Main text, headings
 - Secondary: Light gray (#F5F5F5) - Section backgrounds for contrast
