@@ -200,7 +200,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const fields = [
         'id',
-        'issueDate',
         'endUserName',
         'endUserEmail',
         'endUserMobile',
@@ -212,14 +211,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'invoiceUrl',
         'justSignsInvoiceNumber',
         'justSignsInvoiceUrl',
+        'productInstalled',
         'lotNumber',
         'issue',
         'evidence1Url',
         'evidence2Url',
         'evidence3Url',
-        'productInstalled',
         'claimSqft',
-        'claimValue',
         'createdAt',
       ];
       const parser = new Parser({ fields });
