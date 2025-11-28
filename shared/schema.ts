@@ -57,9 +57,9 @@ export const warrantyClaims = pgTable("warranty_claims", {
   
   // Invoice Details
   invoiceNumber: text("invoice_number").notNull(),
-  invoiceUrl: text("invoice_url"),
+  invoiceUrl: text("invoice_url").notNull(),
   justSignsInvoiceNumber: text("just_signs_invoice_number").notNull(),
-  justSignsInvoiceUrl: text("just_signs_invoice_url"),
+  justSignsInvoiceUrl: text("just_signs_invoice_url").notNull(),
   
   // Product Details
   productInstalled: text("product_installed").notNull(),
@@ -67,9 +67,9 @@ export const warrantyClaims = pgTable("warranty_claims", {
   issue: text("issue").notNull(),
   
   // Evidence
-  evidence1Url: text("evidence_1_url"),
-  evidence2Url: text("evidence_2_url"),
-  evidence3Url: text("evidence_3_url"),
+  evidence1Url: text("evidence_1_url").notNull(),
+  evidence2Url: text("evidence_2_url").notNull(),
+  evidence3Url: text("evidence_3_url").notNull(),
   
   // Item and Warranty Details
   claimSqft: text("claim_sqft").notNull(),

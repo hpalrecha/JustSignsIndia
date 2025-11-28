@@ -138,10 +138,19 @@ export default function WarrantyClaim() {
   });
 
   const onSubmit = (data: InsertWarrantyClaim) => {
-    if (!evidence1File && !evidence2File && !evidence3File) {
+    // Validate all mandatory file uploads
+    const missingFiles: string[] = [];
+    
+    if (!invoiceFile) missingFiles.push("Invoice");
+    if (!justSignsInvoiceFile) missingFiles.push("Just Signs Invoice");
+    if (!evidence1File) missingFiles.push("Evidence 1");
+    if (!evidence2File) missingFiles.push("Evidence 2");
+    if (!evidence3File) missingFiles.push("Evidence 3");
+    
+    if (missingFiles.length > 0) {
       toast({
-        title: "No Evidence",
-        description: "Please upload at least one evidence image.",
+        title: "Missing Required Files",
+        description: `Please upload: ${missingFiles.join(", ")}`,
         variant: "destructive",
       });
       return;
@@ -367,7 +376,7 @@ export default function WarrantyClaim() {
 
                     <div>
                       <FileUploadButton
-                        label="Upload Invoice"
+                        label="Upload Invoice *"
                         file={invoiceFile}
                         onFileSelect={(e) => {
                           if (e.target.files?.[0]) setInvoiceFile(e.target.files[0]);
@@ -393,7 +402,7 @@ export default function WarrantyClaim() {
 
                     <div>
                       <FileUploadButton
-                        label="Upload Just Signs Invoice"
+                        label="Upload Just Signs Invoice *"
                         file={justSignsInvoiceFile}
                         onFileSelect={(e) => {
                           if (e.target.files?.[0]) setJustSignsInvoiceFile(e.target.files[0]);
@@ -486,7 +495,7 @@ export default function WarrantyClaim() {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <FileUploadButton
-                      label="Evidence 1"
+                      label="Evidence 1 *"
                       file={evidence1File}
                       onFileSelect={(e) => {
                         if (e.target.files?.[0]) setEvidence1File(e.target.files[0]);
@@ -496,7 +505,7 @@ export default function WarrantyClaim() {
                     />
 
                     <FileUploadButton
-                      label="Evidence 2"
+                      label="Evidence 2 *"
                       file={evidence2File}
                       onFileSelect={(e) => {
                         if (e.target.files?.[0]) setEvidence2File(e.target.files[0]);
@@ -506,7 +515,7 @@ export default function WarrantyClaim() {
                     />
 
                     <FileUploadButton
-                      label="Evidence 3"
+                      label="Evidence 3 *"
                       file={evidence3File}
                       onFileSelect={(e) => {
                         if (e.target.files?.[0]) setEvidence3File(e.target.files[0]);
@@ -516,7 +525,7 @@ export default function WarrantyClaim() {
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-4">
-                    Upload at least one evidence image. Supported formats: JPG, PNG, PDF
+                    All three evidence images are required. Supported formats: JPG, PNG, PDF
                   </p>
                 </div>
 
