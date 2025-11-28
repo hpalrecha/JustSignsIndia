@@ -42,6 +42,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Push warranty claim data to n8n webhook
       const webhookUrl = "https://n8n.subspace.money/webhook/416cdb30-f82e-4e94-a36e-f1641b24e8d5";
       try {
+        // Build full URL for file links
+        const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+        const host = req.headers['x-forwarded-host'] || req.headers.host;
+        const baseUrl = `${protocol}://${host}`;
+        
+        // Helper function to convert relative path to full URL
+        const toFullUrl = (path: string | null) => path ? `${baseUrl}${path}` : null;
+        
         await fetch(webhookUrl, {
           method: "POST",
           headers: {
@@ -57,15 +65,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
             studioEmail: claim.studioEmail,
             studioContactNo: claim.studioContactNo,
             invoiceNumber: claim.invoiceNumber,
-            invoiceUrl: claim.invoiceUrl,
+            invoiceUrl: toFullUrl(claim.invoiceUrl),
             justSignsInvoiceNumber: claim.justSignsInvoiceNumber,
-            justSignsInvoiceUrl: claim.justSignsInvoiceUrl,
+            justSignsInvoiceUrl: toFullUrl(claim.justSignsInvoiceUrl),
             productInstalled: claim.productInstalled,
             lotNumber: claim.lotNumber,
             issue: claim.issue,
-            evidence1Url: claim.evidence1Url,
-            evidence2Url: claim.evidence2Url,
-            evidence3Url: claim.evidence3Url,
+            evidence1Url: toFullUrl(claim.evidence1Url),
+            evidence2Url: toFullUrl(claim.evidence2Url),
+            evidence3Url: toFullUrl(claim.evidence3Url),
             claimSqft: claim.claimSqft,
             createdAt: claim.createdAt,
           }),
