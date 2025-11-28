@@ -39,6 +39,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertWarrantyClaimSchema.parse(req.body);
       const claim = await storage.createWarrantyClaim(validatedData);
       
+      // Push warranty claim data to n8n webhook
+      const webhookUrl = "https://n8n.subspace.money/webhook-test/416cdb30-f82e-4e94-a36e-f1641b24e8d5";
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: claim.id,
+            endUserName: claim.endUserName,
+            endUserEmail: claim.endUserEmail,
+            endUserMobile: claim.endUserMobile,
+            installationDate: claim.installationDate,
+            studioName: claim.studioName,
+            studioEmail: claim.studioEmail,
+            studioContactNo: claim.studioContactNo,
+            invoiceNumber: claim.invoiceNumber,
+            invoiceUrl: claim.invoiceUrl,
+            justSignsInvoiceNumber: claim.justSignsInvoiceNumber,
+            justSignsInvoiceUrl: claim.justSignsInvoiceUrl,
+            productInstalled: claim.productInstalled,
+            lotNumber: claim.lotNumber,
+            issue: claim.issue,
+            evidence1Url: claim.evidence1Url,
+            evidence2Url: claim.evidence2Url,
+            evidence3Url: claim.evidence3Url,
+            claimSqft: claim.claimSqft,
+            createdAt: claim.createdAt,
+          }),
+        });
+        console.log("Warranty claim data pushed to webhook successfully");
+      } catch (webhookError) {
+        console.error("Error pushing to webhook (non-blocking):", webhookError);
+      }
+      
       res.status(201).json({
         message: "Warranty claim submitted successfully",
         id: claim.id,
