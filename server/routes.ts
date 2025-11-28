@@ -40,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const claim = await storage.createWarrantyClaim(validatedData);
       
       // Push warranty claim data to n8n webhook
-      const webhookUrl = "https://n8n.subspace.money/webhook-test/416cdb30-f82e-4e94-a36e-f1641b24e8d5";
+      const webhookUrl = "https://n8n.subspace.money/webhook/416cdb30-f82e-4e94-a36e-f1641b24e8d5";
       try {
         await fetch(webhookUrl, {
           method: "POST",
