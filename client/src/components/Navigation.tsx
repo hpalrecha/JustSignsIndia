@@ -22,30 +22,32 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 bg-background border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <Link href="/">
-            <a className="flex items-center hover-elevate px-3 py-2 rounded-md" data-testid="link-home">
-              <img 
-                src={logoImage} 
-                alt="Just Signs India" 
-                className="h-12 w-auto"
-              />
-            </a>
+          <Link 
+            href="/" 
+            className="flex items-center hover-elevate px-3 py-2 rounded-md" 
+            data-testid="link-home"
+          >
+            <img 
+              src={logoImage} 
+              alt="Just Signs India" 
+              className="h-12 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link key={item.path} href={item.path}>
-                <a
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    location === item.path
-                      ? "text-primary font-semibold"
-                      : "text-foreground hover:text-primary"
-                  }`}
-                  data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-                >
-                  {item.label}
-                </a>
+              <Link 
+                key={item.path} 
+                href={item.path}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === item.path
+                    ? "text-primary font-semibold"
+                    : "text-foreground hover:text-primary"
+                }`}
+                data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                {item.label}
               </Link>
             ))}
           </div>
@@ -66,18 +68,18 @@ export function Navigation() {
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-1">
             {navItems.map((item) => (
-              <Link key={item.path} href={item.path}>
-                <a
-                  className={`block px-4 py-3 rounded-md text-sm font-medium ${
-                    location === item.path
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "text-foreground hover:bg-accent"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  data-testid={`link-mobile-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-                >
-                  {item.label}
-                </a>
+              <Link 
+                key={item.path} 
+                href={item.path}
+                className={`block px-4 py-3 rounded-md text-sm font-medium ${
+                  location === item.path
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-foreground hover:bg-accent"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                data-testid={`link-mobile-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                {item.label}
               </Link>
             ))}
           </div>

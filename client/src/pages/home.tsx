@@ -146,9 +146,9 @@ export default function Home() {
             <div>
               <h3 className="font-medium text-lg mb-4">Quick Links</h3>
               <div className="space-y-2">
-                <Link href="/about"><a className="block text-muted-foreground hover:text-primary">About Us</a></Link>
-                <Link href="/products"><a className="block text-muted-foreground hover:text-primary">Products</a></Link>
-                <Link href="/contact"><a className="block text-muted-foreground hover:text-primary">Contact</a></Link>
+                <Link href="/about" className="block text-muted-foreground hover:text-primary">About Us</Link>
+                <Link href="/products" className="block text-muted-foreground hover:text-primary">Products</Link>
+                <Link href="/contact" className="block text-muted-foreground hover:text-primary">Contact</Link>
               </div>
             </div>
             <div>

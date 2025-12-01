@@ -5,9 +5,11 @@
 A modern, responsive website for Just Signs India Pvt. Ltd., the Master Distributor of 3M Wrap Films, PPF, Window Films & Signage Solutions across India. The platform features a public-facing website showcasing products and services, along with an admin dashboard for managing contact submissions and warranty claims.
 
 **Core Features:**
-- Multi-page informational website (Home, About, Products, Contact, Warranty Claim)
+- Multi-page informational website (Home, About, Products, Blog, Downloads, Warranty Claim, Contact)
 - Contact form submission system
 - Warranty claim submission with image upload capability
+- Blog system with full CRUD management in admin dashboard
+- Marketing collateral downloads with file upload support (PDFs, images, documents)
 - Admin authentication and dashboard
 - Export functionality for submissions (CSV format)
 - Mobile-responsive design with blood-red (#B70F20) brand color scheme
@@ -29,7 +31,7 @@ Preferred communication style: Simple, everyday language.
 
 **Routing:** wouter for client-side routing
 - File-based page structure in `client/src/pages/`
-- Routes: `/`, `/about`, `/products`, `/warranty-claim`, `/contact`, `/admin`, `/admin/dashboard`
+- Routes: `/`, `/about`, `/products`, `/blog`, `/blog/:slug`, `/downloads`, `/warranty-claim`, `/contact`, `/admin`, `/admin/dashboard`
 
 **State Management:**
 - TanStack React Query for server state and data fetching
@@ -54,10 +56,17 @@ Preferred communication style: Simple, everyday language.
 **Key Endpoints:**
 - `POST /api/contact` - Contact form submission
 - `POST /api/warranty-claims` - Warranty claim submission with image URLs
+- `GET /api/blog` - Get all published blog posts
+- `GET /api/blog/:slug` - Get single blog post by slug
+- `GET /api/marketing-collateral` - Get all marketing collateral
 - `POST /api/admin/login` - Admin authentication
 - `POST /api/admin/logout` - Session termination
 - `GET /api/admin/contact-submissions` - Retrieve all contact submissions
 - `GET /api/admin/warranty-claims` - Retrieve all warranty claims
+- `GET /api/admin/blog` - Retrieve all blog posts (including drafts)
+- `POST/PUT/DELETE /api/admin/blog/:id` - CRUD operations for blog posts
+- `GET /api/admin/marketing-collateral` - Retrieve all marketing collateral
+- `POST/PUT/DELETE /api/admin/marketing-collateral/:id` - CRUD operations for marketing collateral
 - `GET /api/admin/export/contacts` - Export contacts as CSV
 - `GET /api/admin/export/warranty-claims` - Export claims as CSV
 
@@ -77,7 +86,9 @@ Preferred communication style: Simple, everyday language.
 1. `admin_users` - Admin authentication (username, bcrypt-hashed password)
 2. `contact_submissions` - Contact form data (name, phone, email, city, message)
 3. `warranty_claims` - Warranty claim data (customer details, product info, issue description, image URLs)
-4. `session` - Express session store (auto-created by connect-pg-simple)
+4. `blog_posts` - Blog content (title, slug, excerpt, content, featuredImageUrl, published status, timestamps)
+5. `marketing_collateral` - Downloadable files (title, description, category, fileUrl, fileType, fileName, timestamps)
+6. `session` - Express session store (auto-created by connect-pg-simple)
 
 **Data Validation:**
 - Zod schemas generated from Drizzle schema using `drizzle-zod`
