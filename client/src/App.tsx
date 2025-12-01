@@ -7,6 +7,9 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import About from "@/pages/about";
 import Products from "@/pages/products";
+import Blog from "@/pages/blog";
+import BlogPost from "@/pages/blog-post";
+import Downloads from "@/pages/downloads";
 import WarrantyClaim from "@/pages/warranty-claim";
 import Contact from "@/pages/contact";
 import AdminLogin from "@/pages/admin-login";
@@ -18,6 +21,9 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/products" component={Products} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/downloads" component={Downloads} />
       <Route path="/warranty-claim" component={WarrantyClaim} />
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={AdminLogin} />

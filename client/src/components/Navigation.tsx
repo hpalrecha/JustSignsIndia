@@ -12,6 +12,8 @@ export function Navigation() {
     { path: "/", label: "Home" },
     { path: "/about", label: "About Us" },
     { path: "/products", label: "Products" },
+    { path: "/blog", label: "Blog" },
+    { path: "/downloads", label: "Downloads" },
     { path: "/warranty-claim", label: "Warranty Claim" },
     { path: "/contact", label: "Contact Us" },
   ];
