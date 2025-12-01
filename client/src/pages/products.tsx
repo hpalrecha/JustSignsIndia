@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { Link } from "wouter";
-import { Palette, Shield, Bike, Sun, FileText, Sparkles } from "lucide-react";
+import { Palette, Shield, Car, Sun, FileText, Sparkles } from "lucide-react";
 
 export default function Products() {
   const categories = [
@@ -21,7 +21,7 @@ export default function Products() {
     },
     {
       icon: FileText,
-      title: "Printable Wrap Films",
+      title: "Printed Wraps",
       description: "High-quality printable vinyl for custom graphics and fleet branding",
       products: [
         { name: "Gloss Printable", specs: "Vibrant color reproduction" },
@@ -33,15 +33,15 @@ export default function Products() {
       ],
     },
     {
-      icon: Bike,
-      title: "Bike Styling & Decals",
-      description: "Custom motorcycle wraps and graphics, specialized for Royal Enfield",
+      icon: Car,
+      title: "Car Styling & Decals",
+      description: "Custom car wraps and graphics for complete vehicle transformation",
       products: [
-        { name: "Full Bike Wraps", specs: "Complete motorcycle transformation" },
-        { name: "Tank Graphics", specs: "Custom tank design solutions" },
+        { name: "Full Car Wraps", specs: "Complete vehicle transformation" },
+        { name: "Hood Graphics", specs: "Custom hood design solutions" },
         { name: "Racing Stripes", specs: "Performance-inspired styling" },
-        { name: "Fender Decals", specs: "Front and rear fender graphics" },
-        { name: "Frame Protection", specs: "Clear protective film" },
+        { name: "Body Decals", specs: "Side and rear graphics" },
+        { name: "Chrome Delete", specs: "Blackout trim customization" },
         { name: "Custom Logos", specs: "Personalized branding" },
       ],
     },

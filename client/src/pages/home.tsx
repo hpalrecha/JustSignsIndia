@@ -21,7 +21,7 @@ export default function Home() {
   const products = [
     { title: "3M Wrap Films", image: wrapImage, path: "/products" },
     { title: "Paint Protection Films", image: ppfImage, path: "/products" },
-    { title: "Bike Styling & Decals", image: bikeImage, path: "/products" },
+    { title: "Car Styling & Decals", image: bikeImage, path: "/products" },
     { title: "Window Films", image: windowImage, path: "/products" },
     { title: "Signage Solutions", image: signageImage, path: "/products" },
   ];

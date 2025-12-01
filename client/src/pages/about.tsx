@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
-import { Building2, Package, Bike, Zap } from "lucide-react";
+import { Building2, Package, Car, Zap } from "lucide-react";
 import facilityImage from "@assets/generated_images/professional_facility_interior.png";
 import certificationImage from "@assets/generated_images/3m_partnership_certification.png";
 import printingImage from "@assets/generated_images/printing_facility_equipment.png";
@@ -18,9 +18,9 @@ export default function About() {
       description: "State-of-the-art printing, plotting, and lamination facilities for custom solutions and rapid turnaround times.",
     },
     {
-      icon: Bike,
-      title: "Bike Customization",
-      description: "Specialized services for Royal Enfield and premium motorcycle styling with custom wraps, decals, and protection films.",
+      icon: Car,
+      title: "Car Customization",
+      description: "Specialized services for premium car styling with custom wraps, decals, and protection films.",
     },
     {
       icon: Zap,
@@ -141,11 +141,11 @@ export default function About() {
             </Card>
 
             <Card className="p-8">
-              <h3 className="font-serif font-bold text-2xl mb-4 text-primary" data-testid="text-bike-styling-title">
-                Bike Styling & Decals
+              <h3 className="font-serif font-bold text-2xl mb-4 text-primary" data-testid="text-car-styling-title">
+                Car Styling & Decals
               </h3>
-              <p className="text-muted-foreground mb-4" data-testid="text-bike-styling-description">
-                Specialized customization services for motorcycles, especially Royal Enfield models. From full wraps to custom decals, tank graphics, and protection solutions. Our expertise in bike styling helps riders express their personality while protecting their investment.
+              <p className="text-muted-foreground mb-4" data-testid="text-car-styling-description">
+                Specialized customization services for cars. From full wraps to custom decals, hood graphics, and protection solutions. Our expertise in car styling helps owners express their personality while protecting their investment.
               </p>
             </Card>
           </div>
