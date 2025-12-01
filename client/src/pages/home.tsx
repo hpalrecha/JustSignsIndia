@@ -154,9 +154,11 @@ export default function Home() {
             <div>
               <h3 className="font-medium text-lg mb-4">Contact</h3>
               <p className="text-muted-foreground">
-                Business: +91 99459 51456<br />
-                General: +91 93531 89410<br />
-                Email: hp@justsigns.co.in
+                Phone: 080 4336 5954<br />
+                Email: hp@justsigns.co.in<br />
+                75, 1st Floor, Vanivilas Rd,<br />
+                Gandhi Bazaar, Basavanagudi,<br />
+                Bengaluru, Karnataka 560004
               </p>
             </div>
           </div>

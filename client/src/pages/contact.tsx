@@ -55,18 +55,18 @@ export default function Contact() {
   const contactInfo = [
     {
       icon: Phone,
-      title: "Business Enquiry",
-      details: ["+91 99459 51456"],
-    },
-    {
-      icon: Phone,
-      title: "General Enquiry",
-      details: ["+91 93531 89410"],
+      title: "Phone",
+      details: ["080 4336 5954"],
     },
     {
       icon: Mail,
       title: "Email",
       details: ["hp@justsigns.co.in", "sales@justsigns.co.in"],
+    },
+    {
+      icon: MapPin,
+      title: "Address",
+      details: ["75, 1st Floor, Vanivilas Rd,", "Gandhi Bazaar, Basavanagudi,", "Bengaluru, Karnataka 560004"],
     },
     {
       icon: MapPin,
