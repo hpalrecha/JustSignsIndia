@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { getSession, isAdminAuthenticated } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
-import { insertContactSubmissionSchema, insertWarrantyClaimSchema } from "@shared/schema";
+import { insertContactSubmissionSchema, insertWarrantyClaimSchema, insertBlogPostSchema, insertMarketingCollateralSchema } from "@shared/schema";
 import { Parser } from "json2csv";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -273,6 +273,141 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error exporting warranty claims:", error);
       res.status(500).json({ message: "Failed to export warranty claims" });
+    }
+  });
+
+  // Blog post routes (public)
+  app.get("/api/blog", async (req, res) => {
+    try {
+      const posts = await storage.getPublishedBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.get("/api/blog/:slug", async (req, res) => {
+    try {
+      const post = await storage.getBlogPostBySlug(req.params.slug);
+      if (!post || post.published !== "true") {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ message: "Failed to fetch blog post" });
+    }
+  });
+
+  // Blog post admin routes
+  app.get("/api/admin/blog", isAdminAuthenticated, async (req, res) => {
+    try {
+      const posts = await storage.getAllBlogPosts();
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching blog posts:", error);
+      res.status(500).json({ message: "Failed to fetch blog posts" });
+    }
+  });
+
+  app.post("/api/admin/blog", isAdminAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertBlogPostSchema.parse(req.body);
+      const post = await storage.createBlogPost(validatedData);
+      res.status(201).json(post);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating blog post:", error);
+      res.status(500).json({ message: "Failed to create blog post" });
+    }
+  });
+
+  app.put("/api/admin/blog/:id", isAdminAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const post = await storage.updateBlogPost(id, req.body);
+      if (!post) {
+        return res.status(404).json({ message: "Blog post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      console.error("Error updating blog post:", error);
+      res.status(500).json({ message: "Failed to update blog post" });
+    }
+  });
+
+  app.delete("/api/admin/blog/:id", isAdminAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteBlogPost(id);
+      res.json({ message: "Blog post deleted" });
+    } catch (error) {
+      console.error("Error deleting blog post:", error);
+      res.status(500).json({ message: "Failed to delete blog post" });
+    }
+  });
+
+  // Marketing collateral routes (public)
+  app.get("/api/marketing-collateral", async (req, res) => {
+    try {
+      const items = await storage.getAllMarketingCollateral();
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching marketing collateral:", error);
+      res.status(500).json({ message: "Failed to fetch marketing collateral" });
+    }
+  });
+
+  // Marketing collateral admin routes
+  app.get("/api/admin/marketing-collateral", isAdminAuthenticated, async (req, res) => {
+    try {
+      const items = await storage.getAllMarketingCollateral();
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching marketing collateral:", error);
+      res.status(500).json({ message: "Failed to fetch marketing collateral" });
+    }
+  });
+
+  app.post("/api/admin/marketing-collateral", isAdminAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertMarketingCollateralSchema.parse(req.body);
+      const item = await storage.createMarketingCollateral(validatedData);
+      res.status(201).json(item);
+    } catch (error: any) {
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      console.error("Error creating marketing collateral:", error);
+      res.status(500).json({ message: "Failed to create marketing collateral" });
+    }
+  });
+
+  app.put("/api/admin/marketing-collateral/:id", isAdminAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const item = await storage.updateMarketingCollateral(id, req.body);
+      if (!item) {
+        return res.status(404).json({ message: "Marketing collateral not found" });
+      }
+      res.json(item);
+    } catch (error) {
+      console.error("Error updating marketing collateral:", error);
+      res.status(500).json({ message: "Failed to update marketing collateral" });
+    }
+  });
+
+  app.delete("/api/admin/marketing-collateral/:id", isAdminAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteMarketingCollateral(id);
+      res.json({ message: "Marketing collateral deleted" });
+    } catch (error) {
+      console.error("Error deleting marketing collateral:", error);
+      res.status(500).json({ message: "Failed to delete marketing collateral" });
     }
   });
 

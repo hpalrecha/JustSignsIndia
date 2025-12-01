@@ -84,3 +84,45 @@ export const insertWarrantyClaimSchema = createInsertSchema(warrantyClaims).omit
 
 export type InsertWarrantyClaim = z.infer<typeof insertWarrantyClaimSchema>;
 export type WarrantyClaim = typeof warrantyClaims.$inferSelect;
+
+// Blog posts
+export const blogPosts = pgTable("blog_posts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  excerpt: text("excerpt").notNull(),
+  content: text("content").notNull(),
+  featuredImageUrl: text("featured_image_url"),
+  published: text("published").notNull().default("false"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
+export type BlogPost = typeof blogPosts.$inferSelect;
+
+// Marketing collateral
+export const marketingCollateral = pgTable("marketing_collateral", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  fileUrl: text("file_url").notNull(),
+  fileType: text("file_type").notNull(),
+  fileName: text("file_name").notNull(),
+  category: text("category").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMarketingCollateralSchema = createInsertSchema(marketingCollateral).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertMarketingCollateral = z.infer<typeof insertMarketingCollateralSchema>;
+export type MarketingCollateral = typeof marketingCollateral.$inferSelect;
