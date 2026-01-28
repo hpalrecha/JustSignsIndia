@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/logo.png";
+import { ScrollingTicker } from "./ScrollingTicker";
 
 export function Navigation() {
   const [location] = useLocation();
@@ -18,8 +19,12 @@ export function Navigation() {
     { path: "/contact", label: "Contact Us" },
   ];
 
+  const partnerUrl = "https://erp.justsigns.co.in/become-3m-select-partner/new";
+
   return (
-    <nav className="sticky top-0 z-50 bg-background border-b">
+    <>
+      <ScrollingTicker />
+      <nav className="sticky top-0 z-50 bg-background border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link 
@@ -50,6 +55,15 @@ export function Navigation() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={partnerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-md text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+              data-testid="link-nav-become-partner"
+            >
+              Become 3M Partner
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -82,9 +96,20 @@ export function Navigation() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={partnerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block px-4 py-3 rounded-md text-sm font-semibold text-primary hover:bg-primary/10"
+              onClick={() => setMobileMenuOpen(false)}
+              data-testid="link-mobile-become-partner"
+            >
+              Become 3M Partner
+            </a>
           </div>
         )}
       </div>
     </nav>
+    </>
   );
 }
