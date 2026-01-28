@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
 import { Link } from "wouter";
-import { Building2, TrendingUp, Users, Award } from "lucide-react";
+import { Building2, TrendingUp, Users, Award, X } from "lucide-react";
 import heroImage from "@assets/generated_images/hero_car_wrap_application.png";
 import wrapImage from "@assets/generated_images/3m_wrap_films_display.png";
 import ppfImage from "@assets/generated_images/ppf_installation_process.png";
@@ -11,6 +12,15 @@ import windowImage from "@assets/generated_images/window_film_architecture.png";
 import signageImage from "@assets/generated_images/printing_facility_equipment.png";
 
 export default function Home() {
+  const [showPopup, setShowPopup] = useState(false);
+  const partnerUrl = "https://erp.justsigns.co.in/become-3m-select-partner/new";
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
   const stats = [
     { icon: Building2, value: "82+", label: "Cities Covered", color: "text-primary" },
     { icon: TrendingUp, value: "1200+", label: "Projects Delivered", color: "text-primary" },
@@ -28,6 +38,28 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Partner Popup Modal */}
+      {showPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60" data-testid="popup-partner-overlay">
+          <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-md mx-4 p-8 text-center" data-testid="popup-partner-modal">
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              data-testid="button-close-popup"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <h2 className="font-serif font-bold text-2xl mb-4 text-foreground">Become 3M Select Partner</h2>
+            <p className="text-muted-foreground mb-6">Application Now Open! Join India's leading network of 3M certified partners.</p>
+            <a href={partnerUrl} target="_blank" rel="noopener noreferrer">
+              <Button size="lg" className="w-full" data-testid="button-popup-apply">
+                Apply Now
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+
       <Navigation />
 
       {/* Hero Section */}
@@ -149,6 +181,7 @@ export default function Home() {
                 <Link href="/about" className="block text-muted-foreground hover:text-primary">About Us</Link>
                 <Link href="/products" className="block text-muted-foreground hover:text-primary">Products</Link>
                 <Link href="/contact" className="block text-muted-foreground hover:text-primary">Contact</Link>
+                <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="block text-primary font-semibold hover:text-primary/80" data-testid="link-footer-become-partner">Become 3M Partner</a>
               </div>
             </div>
             <div>
