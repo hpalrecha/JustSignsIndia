@@ -25,6 +25,7 @@ export interface IStorage {
   getAdminUserByUsername(username: string): Promise<AdminUser | undefined>;
   createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
   verifyAdminPassword(username: string, password: string): Promise<AdminUser | null>;
+  updateAdminPassword(username: string, newPassword: string): Promise<boolean>;
 
   // Contact submission operations
   getAllContactSubmissions(): Promise<ContactSubmission[]>;
@@ -81,12 +82,20 @@ export class DatabaseStorage implements IStorage {
       return null;
     }
 
-    const isValid = await bcrypt.compare(password, user.password);
+    // Normalize $2y$ (PHP-style) to $2b$ (Node.js bcrypt) — they are algorithmically identical
+    const normalizedHash = user.password.replace(/^\$2y\$/, '$2b$');
+    const isValid = await bcrypt.compare(password, normalizedHash);
     if (!isValid) {
       return null;
     }
 
     return user;
+  }
+
+  async updateAdminPassword(username: string, newPassword: string): Promise<boolean> {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.update(adminUsers).set({ password: hashedPassword }).where(eq(adminUsers.username, username));
+    return true;
   }
 
   // Contact submission operations

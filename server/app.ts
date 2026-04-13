@@ -8,6 +8,7 @@ import express, {
 } from "express";
 
 import { registerRoutes } from "./routes";
+import { storage } from "./storage";
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -67,6 +68,16 @@ app.use((req, res, next) => {
 export default async function runApp(
   setup: (app: Express, server: Server) => Promise<void>,
 ) {
+  // If ADMIN_RESET_PASSWORD env var is set, update the admin user's password on startup
+  if (process.env.ADMIN_RESET_PASSWORD) {
+    try {
+      await storage.updateAdminPassword("admin", process.env.ADMIN_RESET_PASSWORD);
+      log(`Admin password has been reset via ADMIN_RESET_PASSWORD env var`, "startup");
+    } catch (err) {
+      log(`Failed to reset admin password: ${err}`, "startup");
+    }
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
