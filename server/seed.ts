@@ -9,14 +9,14 @@ async function seed() {
   const existingAdmin = await db.select().from(adminUsers).limit(1);
   
   if (existingAdmin.length === 0) {
-    const hashedPassword = await bcrypt.hash("admin123", 10);
+    const hashedPassword = await bcrypt.hash("admin@123", 10);
     await db.insert(adminUsers).values({
       username: "admin",
       password: hashedPassword,
     });
     console.log("Created default admin user:");
     console.log("  Username: admin");
-    console.log("  Password: admin123");
+    console.log("  Password: admin@123");
   } else {
     console.log("Admin user already exists, skipping...");
   }

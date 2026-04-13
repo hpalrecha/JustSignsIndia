@@ -69,9 +69,6 @@ export default function AdminLogin() {
           <p className="text-muted-foreground" data-testid="text-login-subtitle">
             Access the administration dashboard
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
-            Default: admin / admin123
-          </p>
         </div>
 
         <Form {...form}>
