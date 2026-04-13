@@ -9,7 +9,7 @@ async function seed() {
   const existingAdmin = await db.select().from(adminUsers).limit(1);
   
   if (existingAdmin.length === 0) {
-    const hashedPassword = await bcrypt.hash("admin@123", 10);
+    const hashedPassword = await bcrypt.hash("Admin@2024", 10);
     await db.insert(adminUsers).values({
       username: "admin",
       password: hashedPassword,
