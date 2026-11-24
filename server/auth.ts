@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
+import { pool } from "./db";
 
 declare module 'express-session' {
   interface SessionData {
@@ -47,5 +48,44 @@ export const isAdminAuthenticated: RequestHandler = async (req, res, next) => {
   } catch (error) {
     console.error("Auth error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+/**
+ * Finance (/erp) sessions. The role was decided at sign-in (ERP designation, or an erp_users row);
+ * here the session is only held to its age, and to the erp_users row when there is one: deactivating
+ * the row, or changing its role, takes effect on the next request.
+ */
+export const isErpAuthenticated: RequestHandler = async (req, res, next) => {
+  const u = req.session.erpUser;
+  if (!u || Date.now() - u.verifiedAt > ERP_SESSION_MAX_AGE_MS) {
+    req.session.erpUser = undefined;
+    req.session.erpUserId = undefined;
+    return res.status(401).json({ success: false, message: "Please sign in again." });
+  }
+  try {
+    const r = await pool.query(
+      "SELECT id, role, active FROM erp_users WHERE lower(username) = lower($1) LIMIT 1",
+      [u.username],
+    );
+    const row = r.rows[0] as { id: number; role: string; active: boolean | null } | undefined;
+    if (row) {
+      if (row.active === false) {
+        req.session.erpUser = undefined;
+        req.session.erpUserId = undefined;
+        return res.status(401).json({ success: false, message: "Your Finance access has been turned off." });
+      }
+      if (row.role === "nsm" || row.role === "admin") u.role = row.role;
+    } else if (req.session.erpUserId) {
+      // Signed in through a local row that has since been deleted.
+      req.session.erpUser = undefined;
+      req.session.erpUserId = undefined;
+      return res.status(401).json({ success: false, message: "Please sign in again." });
+    }
+    req.erpUser = u;
+    next();
+  } catch (error) {
+    console.error("ERP auth error:", (error as Error)?.message ?? error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

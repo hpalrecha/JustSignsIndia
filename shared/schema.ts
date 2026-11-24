@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, serial, boolean, integer, jsonb, check } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -126,3 +126,29 @@ export const insertMarketingCollateralSchema = createInsertSchema(marketingColla
 
 export type InsertMarketingCollateral = z.infer<typeof insertMarketingCollateralSchema>;
 export type MarketingCollateral = typeof marketingCollateral.$inferSelect;
+
+// ── ERP Finance (/erp) ──────────────────────────────────────────────────────────────────────────
+// Created at server startup with CREATE TABLE IF NOT EXISTS (server/finance/db-bootstrap.ts); these
+// definitions mirror that DDL. The password is checked by the Just Signs ERPNext, never stored here:
+// a row only grants or overrides a Finance role for an ERP login (username = ERP login email).
+export const erpUsers = pgTable("erp_users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  name: text("name"),
+  role: text("role").notNull().default("nsm"),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+}, (t) => [check("erp_users_role_check", sql`${t.role} in ('nsm','admin')`)]);
+
+export type ErpUser = typeof erpUsers.$inferSelect;
+
+export const financeAccessLog = pgTable("finance_access_log", {
+  id: serial("id").primaryKey(),
+  username: text("username"),
+  role: text("role"),
+  endpoint: text("endpoint").notNull(),
+  query: jsonb("query"),
+  status: integer("status"),
+  ip: text("ip"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});

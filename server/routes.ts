@@ -5,6 +5,9 @@ import { getSession, isAdminAuthenticated } from "./auth";
 import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { insertContactSubmissionSchema, insertWarrantyClaimSchema, insertBlogPostSchema, insertMarketingCollateralSchema } from "@shared/schema";
 import { Parser } from "json2csv";
+import financeRouter from "./finance/routes";
+import erpAuthRouter from "./erp/routes";
+import { ensureFinanceTables } from "./finance/db-bootstrap";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up session middleware
