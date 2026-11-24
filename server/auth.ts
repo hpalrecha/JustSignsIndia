@@ -7,6 +7,33 @@ import { pool } from "./db";
 declare module 'express-session' {
   interface SessionData {
     adminUserId?: number;
+    /** Local erp_users row id, when the Finance login matched one. */
+    erpUserId?: number;
+    /** The Finance (/erp) login: a Just Signs ERPNext user, checked against ERP at sign-in. */
+    erpUser?: ErpSessionUser;
+  }
+}
+
+export interface ErpSessionUser {
+  /** ERP Employee id (HR-EMP-xxxxx), or the login email when ERP has no active Employee for it. */
+  id: string;
+  /** ERP login email. */
+  username: string;
+  name: string;
+  role: "nsm" | "admin";
+  /** epoch ms of the ERP password check. */
+  verifiedAt: number;
+}
+
+/** A Finance session is re-checked against ERP (password + designation) after this long. */
+export const ERP_SESSION_MAX_AGE_MS = 12 * 60 * 60 * 1000;
+
+declare global {
+  namespace Express {
+    interface Request {
+      /** Set by isErpAuthenticated. */
+      erpUser?: ErpSessionUser;
+    }
   }
 }
 

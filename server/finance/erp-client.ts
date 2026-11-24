@@ -44,7 +44,7 @@ export interface Tenant {
 export class FinanceNotConfigured extends Error {}
 
 function justSignsSite(): ErpSite {
-  const baseUrl = (process.env.JUSTSIGNS_ERPNEXT_BASE_URL ?? '').trim().replace(//+$/, '');
+  const baseUrl = (process.env.JUSTSIGNS_ERPNEXT_BASE_URL ?? '').trim().replace(/\/+$/, '');
   const key = process.env.JUSTSIGNS_ERPNEXT_API_KEY;
   const secret = process.env.JUSTSIGNS_ERPNEXT_API_SECRET;
   if (!baseUrl || !key || !secret) {

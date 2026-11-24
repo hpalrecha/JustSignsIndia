@@ -13,6 +13,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up session middleware
   app.set("trust proxy", 1);
   app.use(getSession());
+  // ERP Finance (/erp): Just Signs ERPNext sign-in + read-only finance views.
+  try {
+    await ensureFinanceTables();
+  } catch (err) {
+    console.error("[finance] could not create erp_users / finance_access_log:", (err as Error)?.message ?? err);
+  }
+  app.use("/api/erp", erpAuthRouter);
+  app.use("/api/finance", financeRouter);
 
   // Contact form submission endpoint
   app.post("/api/contact", async (req, res) => {
