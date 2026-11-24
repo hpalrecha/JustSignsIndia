@@ -14,6 +14,8 @@ import WarrantyClaim from "@/pages/warranty-claim";
 import Contact from "@/pages/contact";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
+import ErpLogin from "@/pages/erp-login";
+import ErpFinance from "@/pages/erp-finance";
 
 function Router() {
   return (
@@ -28,6 +30,9 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/admin" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
+      <Route path="/erp/login" component={ErpLogin} />
+      <Route path="/erp/finance" component={ErpFinance} />
+      <Route path="/erp/finance/:view" component={ErpFinance} />
       <Route component={NotFound} />
     </Switch>
   );
