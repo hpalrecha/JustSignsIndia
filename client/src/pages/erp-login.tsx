@@ -31,8 +31,11 @@ export default function ErpLogin() {
   useEffect(() => {
     let cancelled = false;
     fetch("/api/erp/me", { credentials: "include" })
-      .then((res) => {
-        if (!cancelled && res.ok) setLocation("/erp/finance");
+      // Only a real JSON {success:true} counts as signed in. A 200 HTML page (API not deployed yet)
+      // must not redirect, or login and finance bounce between each other and the form keeps resetting.
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => {
+        if (!cancelled && body?.success === true) setLocation("/erp/finance");
       })
       .catch(() => {});
     return () => {

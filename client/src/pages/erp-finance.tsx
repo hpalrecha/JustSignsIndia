@@ -80,7 +80,8 @@ export default function ErpFinance() {
       const { status, body } = await getJson<any>("/api/erp/me");
       if (status === 401) return null;
       if (status < 200 || status >= 300) throw new Error(`Session check failed (${status})`);
-      return ((body && (body.data ?? body)) || null) as ErpUser | null;
+      if (!body || body.success !== true) return null;
+      return (body.data ?? null) as ErpUser | null;
     },
   });
 
